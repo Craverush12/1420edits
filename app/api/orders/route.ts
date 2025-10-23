@@ -51,6 +51,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Generate download links for the purchased packs
+    const downloadLinks = packIds.map(packId => ({
+      user_email: email,
+      pack_id: packId
+    }))
+
+    // Store download access in database
+    const { error: downloadError } = await supabase
+      .from('download_links')
+      .insert(downloadLinks)
+
+    if (downloadError) {
+      console.error('Failed to create download links:', downloadError)
+      // Don't fail the order, just log the error
+    }
+
     return NextResponse.json({
       success: true,
       orderCount: packIds.length

@@ -298,7 +298,7 @@ export default function HomePage() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gradient tracking-tight">14.20</h1>
-                <p className="text-xs text-gray-500 uppercase tracking-widest">Desi Bass Edits</p>
+                {/* <p className="text-xs text-gray-500 uppercase tracking-widest">Desi Bass Edits</p> */}
               </div>
             </div>
             

@@ -1,49 +1,63 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createServerClient } from '@/lib/supabase/server'
-import { packs } from '@/data/packs'
 
 export async function GET(req: NextRequest) {
   const email = req.nextUrl.searchParams.get("email")
-  if (!email) return NextResponse.json({ items: [] })
+  if (!email) return NextResponse.json({ packs: [] })
 
   try {
     // Create Supabase client
     const supabase = await createServerClient()
 
-    // Query orders from Supabase
-    const { data, error } = await supabase
-      .from('orders')
-      .select('pack_id, created_at')
-      .eq('email', email)
-      .eq('status', 'completed')
-      .order('created_at', { ascending: false })
+    // Get user's download access
+    const { data: downloads, error } = await supabase
+      .from('download_links')
+      .select('pack_id')
+      .eq('user_email', email)
+      .gt('expires_at', new Date().toISOString())
 
     if (error) {
-      console.error('Failed to query orders:', error)
-      return NextResponse.json({ items: [] })
+      console.error('Failed to query download links:', error)
+      return NextResponse.json({ packs: [] })
     }
 
-    // Deduplicate pack IDs
-    const uniquePackIds = [...new Set(data?.map(order => order.pack_id) || [])]
+    if (!downloads || downloads.length === 0) {
+      return NextResponse.json({ packs: [] })
+    }
 
-    // Build download items array
-    const downloadItems = uniquePackIds
-      .map(packId => {
-        const packMetadata = packs.find(pack => pack.id === packId)
-        if (!packMetadata) return null
-        
-        return {
-          id: packId,
-          title: packMetadata.title,
-          url: `/packs/${packId}.zip`
-        }
-      })
-      .filter(Boolean) // Remove null entries for invalid pack IDs
+    // Get tracks for each pack
+    const packIds = downloads.map(d => d.pack_id)
+    const { data: tracks, error: tracksError } = await supabase
+      .from('pack_downloads')
+      .select('*')
+      .in('pack_id', packIds)
+      .order('pack_id, track_order')
 
-    return NextResponse.json({ items: downloadItems })
+    if (tracksError) {
+      console.error('Failed to query tracks:', tracksError)
+      return NextResponse.json({ packs: [] })
+    }
+
+    // Group tracks by pack
+    const packs = packIds.map(packId => ({
+      packId,
+      tracks: tracks
+        .filter(track => track.pack_id === packId)
+        .map(track => ({
+          id: track.id,
+          title: track.track_title,
+          format: track.file_format,
+          bitDepth: track.bit_depth,
+          sampleRate: track.sample_rate,
+          size: track.file_size,
+          downloadUrl: `/api/download/track/${track.id}?email=${email}`
+        }))
+    }))
+
+    return NextResponse.json({ packs })
 
   } catch (error) {
     console.error('Downloads API error:', error)
-    return NextResponse.json({ items: [] })
+    return NextResponse.json({ packs: [] })
   }
 }
