@@ -4,14 +4,15 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const { searchParams } = new URL(request.url)
-  const email = searchParams.get('email')
-  
-  if (!email) {
-    return Response.json({ error: 'Email required' }, { status: 400 })
-  }
-  
-  const supabase = createClient()
+  try {
+    const { searchParams } = new URL(request.url)
+    const email = searchParams.get('email')
+    
+    if (!email) {
+      return Response.json({ error: 'Email required' }, { status: 400 })
+    }
+    
+    const supabase = createClient()
   
   // Get track info
   const { data: track, error: trackError } = await supabase
@@ -46,11 +47,15 @@ export async function GET(
     return Response.json({ error: 'File not found' }, { status: 404 })
   }
   
-  return new Response(fileData, {
-    headers: {
-      'Content-Type': 'audio/wav',
-      'Content-Disposition': `attachment; filename="${track.track_title}.wav"`,
-      'Content-Length': track.file_size.toString()
-    }
-  })
+    return new Response(fileData, {
+      headers: {
+        'Content-Type': 'audio/wav',
+        'Content-Disposition': `attachment; filename="${track.track_title}.wav"`,
+        'Content-Length': track.file_size.toString()
+      }
+    })
+  } catch (error) {
+    console.error('Download API error:', error)
+    return Response.json({ error: 'Internal server error', details: error.message }, { status: 500 })
+  }
 }
