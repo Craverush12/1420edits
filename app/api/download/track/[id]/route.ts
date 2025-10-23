@@ -25,14 +25,15 @@ export async function GET(
   }
   
   // Verify user has access to this pack
-  const { data: order } = await supabase
-    .from('orders')
+  const { data: downloadLink } = await supabase
+    .from('download_links')
     .select('*')
-    .eq('email', email)
-    .contains('pack_ids', [track.pack_id])
+    .eq('user_email', email)
+    .eq('pack_id', track.pack_id)
+    .gt('expires_at', new Date().toISOString())
     .single()
   
-  if (!order) {
+  if (!downloadLink) {
     return Response.json({ error: 'Access denied' }, { status: 403 })
   }
   
