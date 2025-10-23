@@ -27,6 +27,7 @@ export default function DownloadsPage() {
   const [downloads, setDownloads] = useState<PackDownloads[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [hasSearched, setHasSearched] = useState(false)
 
   useEffect(() => {
     // Get email from URL params
@@ -34,6 +35,7 @@ export default function DownloadsPage() {
     const emailParam = urlParams.get('email')
     if (emailParam) {
       setEmail(emailParam)
+      setHasSearched(true)
       lookup(emailParam)
     }
   }, [])
@@ -45,7 +47,7 @@ export default function DownloadsPage() {
     setError(null)
     
     // Email validation
-    if (!emailAddress.trim()) {
+    if (!emailAddress || !emailAddress.trim()) {
       setError('Please enter an email address')
       return
     }
@@ -57,13 +59,18 @@ export default function DownloadsPage() {
     }
 
     setLoading(true)
+    setHasSearched(true)
     try {
       const res = await fetch(`/api/downloads?email=${encodeURIComponent(emailAddress)}`)
       if (res.ok) {
         const data = await res.json()
+        console.log('API Response:', data) // Debug log
         setDownloads(data.packs || [])
+        console.log('Downloads state:', data.packs) // Debug log
         if (data.packs && data.packs.length > 0) {
           toast.success(`Found ${data.packs.length} pack(s) with ${data.packs.reduce((total: number, pack: PackDownloads) => total + pack.tracks.length, 0)} tracks!`)
+        } else {
+          setError('No downloads found for this email address')
         }
       } else {
         setError('Failed to fetch downloads. Please try again.')
@@ -95,7 +102,7 @@ export default function DownloadsPage() {
     )
   }
 
-  if (downloads.length === 0 && !loading) {
+  if (downloads.length === 0 && !loading && hasSearched && email) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <div className="text-center">
@@ -127,26 +134,28 @@ export default function DownloadsPage() {
           </div>
         )}
 
-        {/* Email lookup form */}
-        <div className="flex gap-2 mb-8">
-          <Input 
-            placeholder="you@example.com" 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && lookup()}
-            aria-label="Email address"
-            disabled={loading}
-            className="bg-[#151515] border-[#2a2a2a] text-white"
-          />
-          <Button 
-            onClick={() => lookup()} 
-            disabled={loading}
-            className="bg-gradient-to-r from-[#ff3366] to-[#ff1744] hover:from-[#ff1744] hover:to-[#ff3366]"
-          >
-            {loading ? 'Searching...' : 'Find Downloads'}
-          </Button>
-        </div>
+        {/* Email lookup form - show if no email in URL or no downloads found */}
+        {!hasSearched && (
+          <div className="flex gap-2 mb-8">
+            <Input 
+              placeholder="you@example.com" 
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && lookup()}
+              aria-label="Email address"
+              disabled={loading}
+              className="bg-[#151515] border-[#2a2a2a] text-white"
+            />
+            <Button 
+              onClick={() => lookup()} 
+              disabled={loading}
+              className="bg-gradient-to-r from-[#ff3366] to-[#ff1744] hover:from-[#ff1744] hover:to-[#ff3366]"
+            >
+              {loading ? 'Searching...' : 'Find Downloads'}
+            </Button>
+          </div>
+        )}
 
         {downloads.map((pack) => (
           <Card key={pack.packId} className="mb-6 bg-[#151515] border-[#2a2a2a]">
