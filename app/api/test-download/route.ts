@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 
 export async function GET() {
-  const supabase = createClient()
+  const supabase = await createClient()
   
   // Test 1: Check if track exists
   const { data: track, error: trackError } = await supabase

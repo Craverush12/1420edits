@@ -12,7 +12,7 @@ export async function GET(
       return Response.json({ error: 'Email required' }, { status: 400 })
     }
     
-    const supabase = createClient()
+    const supabase = await createClient()
   
   // Get track info
   const { data: track, error: trackError } = await supabase
