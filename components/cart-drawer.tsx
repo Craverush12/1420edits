@@ -69,39 +69,36 @@ async function ensureRazorpayScript(): Promise<void> {
 }
 
 export function CartDrawer() {
-  // COMMENTED OUT: Bundle-related state from cart context
-  // const { items, removePack, clear, count, totalInInr, selectedBundle, setSelectedBundle } = useCart()
-  const { items, removePack, clear, count, totalInInr } = useCart()
+  const { items, removePack, clear, count, totalInInr, selectedBundle, setSelectedBundle } = useCart()
   const [open, setOpen] = useState(false)
   const [processing, setProcessing] = useState(false)
   const [showEmail, setShowEmail] = useState(false) // only ask email after clicking Checkout
   const router = useRouter() //
 
-  // COMMENTED OUT: Bundle selection handler for audio edits
-  // const handleBundleSelection = (bundleSize: 2 | 3 | 5) => {
-  //   setSelectedBundle(bundleSize)
-  //   setOpen(false) // Close the cart drawer
-  //   
-  //   // Show notification based on current count
-  //   const packsNeeded = bundleSize - count
-  //   if (packsNeeded > 0) {
-  //     toast.success(`Bundle of ${bundleSize} selected! Add ${packsNeeded} more pack${packsNeeded > 1 ? 's' : ''} to get the discount.`, {
-  //       duration: 5000,
-  //     })
-  //   } else {
-  //     toast.success(`Bundle of ${bundleSize} selected! Discount applied.`, {
-  //       duration: 3000,
-  //     })
-  //   }
-  //   
-  //   // Scroll to packs section
-  //   setTimeout(() => {
-  //     const packsSection = document.getElementById('packs-section')
-  //     if (packsSection) {
-  //       packsSection.scrollIntoView({ behavior: 'smooth' })
-  //     }
-  //   }, 500)
-  // }
+  const handleBundleSelection = (bundleSize: 2 | 3 | 5) => {
+    setSelectedBundle(bundleSize)
+    setOpen(false) // Close the cart drawer
+    
+    // Show notification based on current count
+    const packsNeeded = bundleSize - count
+    if (packsNeeded > 0) {
+      toast.success(`Bundle of ${bundleSize} selected! Add ${packsNeeded} more pack${packsNeeded > 1 ? 's' : ''} to get the discount.`, {
+        duration: 5000,
+      })
+    } else {
+      toast.success(`Bundle of ${bundleSize} selected! Discount applied.`, {
+        duration: 3000,
+      })
+    }
+    
+    // Scroll to packs section
+    setTimeout(() => {
+      const packsSection = document.getElementById('packs-section')
+      if (packsSection) {
+        packsSection.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 500)
+  }
 
   async function checkout(email: string) {
     try {
@@ -133,7 +130,7 @@ export function CartDrawer() {
         amount: totalInInr * 100,
         currency: "INR",
         name: "14.20's Desi Bass Edits",
-        description: `${count} item(s) purchase`,
+        description: `${count} pack(s) purchase`,
         order_id: orderId,
         prefill: { email },
         notes,
@@ -226,7 +223,7 @@ export function CartDrawer() {
                 <Music className="w-6 h-6 text-gray-600" />
               </div>
               <h3 className="text-xl font-black text-white mb-3 uppercase tracking-tight">Cart Empty</h3>
-              <p className="text-gray-500 text-sm uppercase tracking-wider">Add items to start</p>
+              <p className="text-gray-500 text-sm uppercase tracking-wider">Add tracks to start</p>
             </div>
           ) : (
             <>
@@ -254,8 +251,8 @@ export function CartDrawer() {
               
               <Separator className="my-8" />
               
-              {/* COMMENTED OUT: Bundle Selection UI for audio edits */}
-              {/* {count > 0 && (!selectedBundle || count < selectedBundle) && (
+              {/* Bundle Selection - Only show if user has items but no bundle selected or incomplete bundle */}
+              {count > 0 && (!selectedBundle || count < selectedBundle) && (
                 <div className="space-y-4">
                   <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2">Upgrade to Bundle</h3>
                   <div className="grid gap-2">
@@ -308,7 +305,7 @@ export function CartDrawer() {
                     </button>
                   </div>
                 </div>
-              )} */}
+              )}
               
               <Separator className="my-8" />
               
@@ -318,30 +315,22 @@ export function CartDrawer() {
                 
                 {/* Individual Items */}
                 <div className="space-y-3">
-                  {items.map((item, index) => {
-                    // Price mapping for t-shirts
-                    const TSHIRT_PRICES: Record<string, number> = {
-                      'tshirt-1': 899,
-                      'tshirt-2': 999,
-                    }
-                    const itemPrice = TSHIRT_PRICES[item.id] || 899
-                    return (
-                      <div key={item.id} className="flex items-center justify-between text-sm py-2 px-3 bg-[#151515] rounded-lg border border-[#2a2a2a]">
-                        <span className="text-gray-300 font-medium">{item.title}</span>
-                        <span className="text-white font-bold">₹{itemPrice}</span>
-                      </div>
-                    )
-                  })}
+                  {items.map((item, index) => (
+                    <div key={item.id} className="flex items-center justify-between text-sm py-2 px-3 bg-[#151515] rounded-lg border border-[#2a2a2a]">
+                      <span className="text-gray-300 font-medium">{item.title}</span>
+                      <span className="text-white font-bold">₹499</span>
+                    </div>
+                  ))}
                 </div>
                 
-                {/* Subtotal - Simplified for t-shirts */}
-                <div className="flex items-center justify-between text-lg border-t-2 border-[#ff3366] pt-4 bg-gradient-to-r from-[#ff3366]/10 to-[#ff1744]/10 p-4 rounded-lg">
-                  <span className="font-bold text-white uppercase tracking-wider">Total</span>
-                  <span className="text-3xl font-black text-gradient">₹{totalInInr}</span>
+                {/* Subtotal */}
+                <div className="flex items-center justify-between text-sm border-t-2 border-[#2a2a2a] pt-4 bg-[#151515] p-3 rounded-lg">
+                  <span className="text-gray-300 font-medium">Subtotal ({count} items)</span>
+                  <span className="text-white font-bold text-lg">₹{count * 499}</span>
                 </div>
                 
-                {/* COMMENTED OUT: Bundle Discount display for audio edits */}
-                {/* {selectedBundle && count === selectedBundle && (
+                {/* Bundle Discount - Only show when bundle is complete */}
+                {selectedBundle && count === selectedBundle && (
                   <>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-green-400 font-medium">
@@ -352,6 +341,7 @@ export function CartDrawer() {
                       </span>
                     </div>
                     
+                    {/* Show discounted total prominently */}
                     <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -365,15 +355,15 @@ export function CartDrawer() {
                       </div>
                     </div>
                   </>
-                )} */}
+                )}
                 
-                {/* COMMENTED OUT: Regular Total display logic for bundles */}
-                {/* {(!selectedBundle || count !== selectedBundle) && (
+                {/* Regular Total - Only show if no bundle or incomplete bundle */}
+                {(!selectedBundle || count !== selectedBundle) && (
                   <div className="flex items-center justify-between text-lg border-t-2 border-[#ff3366] pt-4 bg-gradient-to-r from-[#ff3366]/10 to-[#ff1744]/10 p-4 rounded-lg">
                     <span className="font-bold text-white uppercase tracking-wider">Total</span>
                     <span className="text-3xl font-black text-gradient">₹{totalInInr}</span>
                   </div>
-                )} */}
+                )}
               </div>
               
               <Separator className="my-8" />

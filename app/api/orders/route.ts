@@ -52,9 +52,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate download links for the purchased packs
+    // Set expires_at to 1 year from now (or a very far future date for permanent access)
+    const expiresAt = new Date()
+    expiresAt.setFullYear(expiresAt.getFullYear() + 1) // 1 year from now
+    
     const downloadLinks = packIds.map(packId => ({
       user_email: email,
-      pack_id: packId
+      pack_id: packId,
+      expires_at: expiresAt.toISOString()
     }))
 
     // Store download access in database

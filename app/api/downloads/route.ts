@@ -10,11 +10,15 @@ export async function GET(req: NextRequest) {
     const supabase = await createServerClient()
 
     // Get user's download access
-    const { data: downloads, error } = await supabase
+    // Include links with no expiry or expiry in future
+    const { data: allDownloads, error } = await supabase
       .from('download_links')
-      .select('pack_id')
+      .select('pack_id, expires_at')
       .eq('user_email', email)
-      .gt('expires_at', new Date().toISOString())
+    
+    // Filter for valid links (no expiry OR expiry in future)
+    const now = new Date().toISOString()
+    const downloads = allDownloads?.filter(d => !d.expires_at || d.expires_at > now) || []
 
     if (error) {
       console.error('Failed to query download links:', error)

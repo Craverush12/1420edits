@@ -86,208 +86,107 @@ function EmailCapture({
   )
 }
 
-// COMMENTED OUT: Bundle Section Component for audio edits
-// function BundlesSection({ onSelect }: { onSelect: (size: 2 | 3 | 5) => void }) {
-//   const bundles = [
-//     { 
-//       size: 2 as const, 
-//       title: "Duo Pack", 
-//       subtitle: "Bundle of 2",
-//       price: PRICES_INR.bundle2, 
-//       desc: "Pick any 2 volumes",
-//       savings: "Save ₹99",
-//       gradient: "from-blue-500 to-cyan-500",
-//       icon: Music
-//     },
-//     { 
-//       size: 3 as const, 
-//       title: "Triple Pack", 
-//       subtitle: "Bundle of 3",
-//       price: PRICES_INR.bundle3, 
-//       desc: "Pick any 3 volumes",
-//       savings: "Save ₹198",
-//       gradient: "from-purple-500 to-pink-500",
-//       icon: Zap
-//     },
-//     { 
-//       size: 5 as const, 
-//       title: "Complete Pack", 
-//       subtitle: "Bundle of 5",
-//       price: PRICES_INR.bundle5, 
-//       desc: "Pick all 5 volumes",
-//       savings: "Save ₹296",
-//       gradient: "from-orange-500 to-red-500",
-//       icon: Star
-//     },
-//   ]
-//   
-//   return (
-//     <div className="space-y-10">
-//       <div className="text-center space-y-4">
-//         <h3 className="text-5xl font-black text-gradient uppercase tracking-tighter">Bundle Deals</h3>
-//         <p className="text-gray-500 text-lg uppercase tracking-wider">MORE TRACKS. MORE SAVINGS.</p>
-//       </div>
-//       
-//       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-//         {bundles.map((b, index) => {
-//           const Icon = b.icon
-//           return (
-//             <Card 
-//               key={b.size} 
-//               className="group relative overflow-hidden bg-[#151515] border-2 border-[#2a2a2a] shadow-soft transition-all duration-300 hover:shadow-glow hover:border-[#ff3366] animate-slide-up"
-//               style={{ animationDelay: `${index * 150}ms` }}
-//             >
-//               {/* Grunge Background Pattern */}
-//               <div className="absolute inset-0 opacity-5">
-//                 <div className="h-full w-full" style={{
-//                   backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, #fff 10px, #fff 11px)'
-//                 }}></div>
-//               </div>
-//               
-//               <CardContent className="relative p-5 text-center space-y-6 shadow-card">
-//                 {/* Icon */}
-//                 <div className="w-12 h-12 mx-auto bg-gradient-to-br from-[#ff3366] to-[#ff1744] flex items-center justify-center shadow-glow">
-//                   <Icon className="w-6 h-6 text-black" />
-//                 </div>
-//                 
-//                 {/* Title & Subtitle */}
-//                 <div className="space-y-1.5">
-//                   <h4 className="text-xl font-black text-white uppercase tracking-tight">{b.title}</h4>
-//                   <p className="text-xs text-gray-500 uppercase tracking-widest">{b.subtitle}</p>
-//                 </div>
-//                 
-//                 {/* Description */}
-//                 <p className="text-gray-400 text-sm">{b.desc}</p>
-//                 
-//                 {/* Price */}
-//                 <div className="space-y-2">
-//                   <div className="text-3xl font-black text-gradient">₹{b.price}</div>
-//                   <div className="inline-flex items-center px-3 py-1 bg-[#ff3366]/20 text-[#ff3366] text-xs font-bold uppercase tracking-wider border border-[#ff3366]/30">
-//                     {b.savings}
-//                   </div>
-//                 </div>
-//                 
-//                 {/* CTA Button */}
-//                 <Button 
-//                   onClick={() => onSelect(b.size)}
-//                   className="w-full h-10 font-bold text-sm btn-premium"
-//                 >
-//                   Select {b.size} Volumes
-//                 </Button>
-//               </CardContent>
-//             </Card>
-//           )
-//         })}
-//       </div>
-//     </div>
-//   )
-// }
+function BundlesSection({ onSelect }: { onSelect: (size: 2 | 3 | 5) => void }) {
+  const bundles = [
+    { 
+      size: 2 as const, 
+      title: "Duo Pack", 
+      subtitle: "Bundle of 2",
+      price: PRICES_INR.bundle2, 
+      desc: "Pick any 2 volumes",
+      savings: "Save ₹99",
+      gradient: "from-blue-500 to-cyan-500",
+      icon: Music
+    },
+    { 
+      size: 3 as const, 
+      title: "Triple Pack", 
+      subtitle: "Bundle of 3",
+      price: PRICES_INR.bundle3, 
+      desc: "Pick any 3 volumes",
+      savings: "Save ₹198",
+      gradient: "from-purple-500 to-pink-500",
+      icon: Zap
+    },
+    { 
+      size: 5 as const, 
+      title: "Complete Pack", 
+      subtitle: "Bundle of 5",
+      price: PRICES_INR.bundle5, 
+      desc: "Pick all 5 volumes",
+      savings: "Save ₹296",
+      gradient: "from-orange-500 to-red-500",
+      icon: Star
+    },
+  ]
+  
+  return (
+    <div className="space-y-10">
+      <div className="text-center space-y-4">
+        <h3 className="text-5xl font-black text-gradient uppercase tracking-tighter">Bundle Deals</h3>
+        <p className="text-gray-500 text-lg uppercase tracking-wider">MORE TRACKS. MORE SAVINGS.</p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {bundles.map((b, index) => {
+          const Icon = b.icon
+          return (
+            <Card 
+              key={b.size} 
+              className="group relative overflow-hidden bg-[#151515] border-2 border-[#2a2a2a] shadow-soft transition-all duration-300 hover:shadow-glow hover:border-[#ff3366] animate-slide-up"
+              style={{ animationDelay: `${index * 150}ms` }}
+            >
+              {/* Grunge Background Pattern */}
+              <div className="absolute inset-0 opacity-5">
+                <div className="h-full w-full" style={{
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, #fff 10px, #fff 11px)'
+                }}></div>
+              </div>
+              
+              <CardContent className="relative p-5 text-center space-y-6 shadow-card">
+                {/* Icon */}
+                <div className="w-12 h-12 mx-auto bg-gradient-to-br from-[#ff3366] to-[#ff1744] flex items-center justify-center shadow-glow">
+                  <Icon className="w-6 h-6 text-black" />
+                </div>
+                
+                {/* Title & Subtitle */}
+                <div className="space-y-1.5">
+                  <h4 className="text-xl font-black text-white uppercase tracking-tight">{b.title}</h4>
+                  <p className="text-xs text-gray-500 uppercase tracking-widest">{b.subtitle}</p>
+                </div>
+                
+                {/* Description */}
+                <p className="text-gray-400 text-sm">{b.desc}</p>
+                
+                {/* Price */}
+                <div className="space-y-2">
+                  <div className="text-3xl font-black text-gradient">₹{b.price}</div>
+                  <div className="inline-flex items-center px-3 py-1 bg-[#ff3366]/20 text-[#ff3366] text-xs font-bold uppercase tracking-wider border border-[#ff3366]/30">
+                    {b.savings}
+                  </div>
+                </div>
+                
+                {/* CTA Button */}
+                <Button 
+                  onClick={() => onSelect(b.size)}
+                  className="w-full h-10 font-bold text-sm btn-premium"
+                >
+                  Select {b.size} Volumes
+                </Button>
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
 
-// COMMENTED OUT: Original PackCard component for audio edits
-// function PackCard({ id, title, coverImage }: { id: string; title: string; coverImage: string }) {
-//   const { stock, isLoading } = useStock(id)
-//   const { addPack, items } = useCart()
-//   const inCart = items.some((i) => i.id === id)
-//   const samples = packSamples[id as keyof typeof packSamples] || []
-//   const [isHovered, setIsHovered] = useState(false)
-
-//   return (
-//     <Card
-//       className={cn(
-//         "group relative overflow-hidden bg-[#151515] border-2 border-[#2a2a2a] shadow-soft transition-all duration-500 hover:shadow-glow hover:border-[#ff3366]",
-//         inCart && "border-[#ff3366] shadow-glow"
-//       )}
-//       onMouseEnter={() => setIsHovered(true)}
-//       onMouseLeave={() => setIsHovered(false)}
-//     >
-//       {/* Grunge Background Pattern */}
-//       <div className="absolute inset-0 opacity-5">
-//         <div className="h-full w-full" style={{
-//           backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 10px, #fff 10px, #fff 11px)'
-//         }}></div>
-//       </div>
-//       
-//       <CardContent className="relative p-4 space-y-5 shadow-card">
-//         {/* Cover Image with Grunge Effects */}
-//         <div className="relative aspect-square w-full overflow-hidden bg-black">
-//           <Image
-//             src={coverImage}
-//             alt={`${title} artwork`}
-//             width={800}
-//             height={800}
-//             className={cn(
-//               "h-full w-full object-cover transition-all duration-500 grayscale-[30%]",
-//               isHovered && "scale-110 grayscale-0"
-//             )}
-//           />
-//           
-//           {/* Dark Overlay */}
-//           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-//           
-//           {/* Play Button Overlay */}
-//           <div className={cn(
-//             "absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300",
-//             isHovered && "opacity-100"
-//           )}>
-//             <div className="w-16 h-16 bg-[#ff3366] flex items-center justify-center shadow-glow border-2 border-[#ff3366]/50">
-//               <Play className="w-6 h-6 text-black ml-1" fill="black" />
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* Audio Players */}
-//         <div className="space-y-2">
-//           {samples.map((s: { title: string; url: string }, idx: number) => (
-//             <div key={idx} className="animate-fade-in" style={{ animationDelay: `${idx * 100}ms` }}>
-//               <AudioPlayer src={s.url} title={s.title} />
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* Price & Stock Info */}
-//         <div className="flex items-center justify-between pt-1.5 border-t border-[#2a2a2a]">
-//           <div className="flex items-center gap-2">
-//             <Star className="w-4 h-4 text-[#ff3366] fill-current" />
-//             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">LIMITED</span>
-//           </div>
-//           <div className="text-right">
-//             <div className="text-xl font-black text-gradient">₹{PRICES_INR.single}</div>
-//             <div className="text-xs text-gray-600 uppercase tracking-wider">{isLoading ? "..." : `${stock} LEFT`}</div>
-//           </div>
-//         </div>
-
-//         {/* Add to Cart Button */}
-//         <Button
-//           onClick={() => addPack({ id, title })}
-//           disabled={inCart}
-//           className={cn(
-//             "w-full h-10 font-bold text-sm transition-all duration-300",
-//             inCart 
-//               ? "bg-[#1a1a1a] text-[#ff3366] border-2 border-[#ff3366] shadow-glow" 
-//               : "btn-premium"
-//           )}
-//         >
-//           {inCart ? (
-//             <div className="flex items-center gap-2 uppercase tracking-wider">
-//               <ShoppingCart className="w-5 h-5" />
-//               In Cart
-//             </div>
-//           ) : (
-//             <div className="flex items-center gap-2 uppercase tracking-wider">
-//               <ShoppingCart className="w-5 h-5" />
-//               Add to Cart
-//             </div>
-//           )}
-//         </Button>
-//       </CardContent>
-//     </Card>
-//   )
-// }
-
-// T-Shirt Card Component
-function TShirtCard({ id, title, image, price }: { id: string; title: string; image: string; price: number }) {
+function PackCard({ id, title, coverImage }: { id: string; title: string; coverImage: string }) {
+  const { stock, isLoading } = useStock(id)
   const { addPack, items } = useCart()
   const inCart = items.some((i) => i.id === id)
+  const samples = packSamples[id as keyof typeof packSamples] || []
   const [isHovered, setIsHovered] = useState(false)
 
   return (
@@ -307,11 +206,11 @@ function TShirtCard({ id, title, image, price }: { id: string; title: string; im
       </div>
       
       <CardContent className="relative p-4 space-y-5 shadow-card">
-        {/* T-Shirt Image with Grunge Effects */}
+        {/* Cover Image with Grunge Effects */}
         <div className="relative aspect-square w-full overflow-hidden bg-black">
           <Image
-            src={image}
-            alt={title}
+            src={coverImage}
+            alt={`${title} artwork`}
             width={800}
             height={800}
             className={cn(
@@ -322,12 +221,25 @@ function TShirtCard({ id, title, image, price }: { id: string; title: string; im
           
           {/* Dark Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          
+          {/* Play Button Overlay */}
+          <div className={cn(
+            "absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300",
+            isHovered && "opacity-100"
+          )}>
+            <div className="w-16 h-16 bg-[#ff3366] flex items-center justify-center shadow-glow border-2 border-[#ff3366]/50">
+              <Play className="w-6 h-6 text-black ml-1" fill="black" />
+            </div>
+          </div>
         </div>
 
-        {/* Title */}
+        {/* Audio Players */}
         <div className="space-y-2">
-          <h4 className="text-lg font-black text-white uppercase tracking-tight">{title}</h4>
-          <p className="text-xs text-gray-500 uppercase tracking-wider">Premium T-Shirt</p>
+          {samples.map((s: { title: string; url: string }, idx: number) => (
+            <div key={idx} className="animate-fade-in" style={{ animationDelay: `${idx * 100}ms` }}>
+              <AudioPlayer src={s.url} title={s.title} />
+            </div>
+          ))}
         </div>
 
         {/* Price & Stock Info */}
@@ -337,7 +249,8 @@ function TShirtCard({ id, title, image, price }: { id: string; title: string; im
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">LIMITED</span>
           </div>
           <div className="text-right">
-            <div className="text-xl font-black text-gradient">₹{price}</div>
+            <div className="text-xl font-black text-gradient">₹{PRICES_INR.single}</div>
+            <div className="text-xs text-gray-600 uppercase tracking-wider">{isLoading ? "..." : `${stock} LEFT`}</div>
           </div>
         </div>
 
@@ -369,10 +282,93 @@ function TShirtCard({ id, title, image, price }: { id: string; title: string; im
   )
 }
 
+// COMMENTED OUT: T-Shirt Card Component (keeping for future use)
+// function TShirtCard({ id, title, image, price }: { id: string; title: string; image: string; price: number }) {
+//   const { addPack, items } = useCart()
+//   const inCart = items.some((i) => i.id === id)
+//   const [isHovered, setIsHovered] = useState(false)
+
+//   return (
+//     <Card
+//       className={cn(
+//         "group relative overflow-hidden bg-[#151515] border-2 border-[#2a2a2a] shadow-soft transition-all duration-500 hover:shadow-glow hover:border-[#ff3366]",
+//         inCart && "border-[#ff3366] shadow-glow"
+//       )}
+//       onMouseEnter={() => setIsHovered(true)}
+//       onMouseLeave={() => setIsHovered(false)}
+//     >
+//       {/* Grunge Background Pattern */}
+//       <div className="absolute inset-0 opacity-5">
+//         <div className="h-full w-full" style={{
+//           backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 10px, #fff 10px, #fff 11px)'
+//         }}></div>
+//       </div>
+//       
+//       <CardContent className="relative p-4 space-y-5 shadow-card">
+//         {/* T-Shirt Image with Grunge Effects */}
+//         <div className="relative aspect-square w-full overflow-hidden bg-black">
+//           <Image
+//             src={image}
+//             alt={title}
+//             width={800}
+//             height={800}
+//             className={cn(
+//               "h-full w-full object-cover transition-all duration-500 grayscale-[30%]",
+//               isHovered && "scale-110 grayscale-0"
+//             )}
+//           />
+//           
+//           {/* Dark Overlay */}
+//           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+//         </div>
+
+//         {/* Title */}
+//         <div className="space-y-2">
+//           <h4 className="text-lg font-black text-white uppercase tracking-tight">{title}</h4>
+//           <p className="text-xs text-gray-500 uppercase tracking-wider">Premium T-Shirt</p>
+//         </div>
+
+//         {/* Price & Stock Info */}
+//         <div className="flex items-center justify-between pt-1.5 border-t border-[#2a2a2a]">
+//           <div className="flex items-center gap-2">
+//             <Star className="w-4 h-4 text-[#ff3366] fill-current" />
+//             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">LIMITED</span>
+//           </div>
+//           <div className="text-right">
+//             <div className="text-xl font-black text-gradient">₹{price}</div>
+//           </div>
+//         </div>
+
+//         {/* Add to Cart Button */}
+//         <Button
+//           onClick={() => addPack({ id, title })}
+//           disabled={inCart}
+//           className={cn(
+//             "w-full h-10 font-bold text-sm transition-all duration-300",
+//             inCart 
+//               ? "bg-[#1a1a1a] text-[#ff3366] border-2 border-[#ff3366] shadow-glow" 
+//               : "btn-premium"
+//           )}
+//         >
+//           {inCart ? (
+//             <div className="flex items-center gap-2 uppercase tracking-wider">
+//               <ShoppingCart className="w-5 h-5" />
+//               In Cart
+//             </div>
+//           ) : (
+//             <div className="flex items-center gap-2 uppercase tracking-wider">
+//               <ShoppingCart className="w-5 h-5" />
+//               Add to Cart
+//             </div>
+//           )}
+//         </Button>
+//       </CardContent>
+//     </Card>
+//   )
+// }
+
 export default function HomePage() {
-  // COMMENTED OUT: Bundle-related state (keeping for future use if needed)
-  // const { selectedBundle, setSelectedBundle, items } = useCart()
-  const { items } = useCart()
+  const { selectedBundle, setSelectedBundle, items } = useCart()
   const packsRef = useRef<HTMLDivElement | null>(null)
 
   return (
@@ -428,8 +424,8 @@ export default function HomePage() {
                 Brass Hits <span className="text-[#ff3366]">×</span> Urban Bass
               </h3>
               <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
-                Premium merchandise for the underground. 
-                Show your style with our exclusive t-shirt collection.
+                Underground Bollywood edits with crushing bass drops. 
+                Made for DJs who don't play by the rules.
               </p>
             </div>
             
@@ -438,7 +434,7 @@ export default function HomePage() {
                 onClick={() => packsRef.current?.scrollIntoView({ behavior: "smooth" })}
                 className="btn-premium text-base px-10 py-3"
               >
-                Shop Merchandise
+                Explore Packs
               </Button>
               {/* <Button 
                 variant="outline"
@@ -451,8 +447,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* COMMENTED OUT: Bundles Section for audio edits */}
-      {/* <section className="py-16 bg-[#0a0a0a] border-b border-[#2a2a2a]">
+      {/* Bundles Section */}
+      <section className="py-16 bg-[#0a0a0a] border-b border-[#2a2a2a]">
         <div className="mx-auto max-w-7xl px-6">
           <BundlesSection
             onSelect={(size) => {
@@ -461,10 +457,10 @@ export default function HomePage() {
             }}
           />
         </div>
-      </section> */}
+      </section>
 
-      {/* COMMENTED OUT: Bundle Selection Indicator for audio edits */}
-      {/* {selectedBundle && (
+      {/* Bundle Selection Indicator */}
+      {selectedBundle && (
         <div className="mx-auto max-w-7xl px-6 mb-8">
           <div className="bg-[#151515] border-2 border-[#ff3366] p-4 animate-scale-in shadow-glow">
             <div className="flex items-center justify-between">
@@ -490,10 +486,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      )} */}
+      )}
 
-      {/* COMMENTED OUT: Original Products Section for Audio Edits */}
-      {/* <section ref={packsRef} id="packs-section" className="py-16 bg-[#0a0a0a]">
+      {/* Products Section */}
+      <section ref={packsRef} id="packs-section" className="py-16 bg-[#0a0a0a]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-16">
             <h3 className="text-5xl font-black text-gradient mb-4 uppercase tracking-tighter">Full Collection</h3>
@@ -512,10 +508,10 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section> */}
+      </section>
 
-      {/* T-Shirts Section */}
-      <section ref={packsRef} id="packs-section" className="py-16 bg-[#0a0a0a]">
+      {/* COMMENTED OUT: T-Shirts Section (keeping for future use) */}
+      {/* <section ref={packsRef} id="packs-section" className="py-16 bg-[#0a0a0a]">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-16">
             <h3 className="text-5xl font-black text-gradient mb-4 uppercase tracking-tighter">Merchandise</h3>
@@ -552,7 +548,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Grunge Footer */}
       <footer className="bg-black text-gray-400 py-16 border-t-2 border-[#2a2a2a]">
