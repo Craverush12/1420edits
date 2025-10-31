@@ -13,7 +13,7 @@ import { useCart } from "@/components/cart-context"
 import { CartDrawer } from "@/components/cart-drawer"
 import { AudioPlayer } from "@/components/audio-player"
 import { packs, packSamples } from "@/data/packs"
-import { ShoppingCart, Music, Zap, Star, Play } from "lucide-react"
+import { ShoppingCart, Music, Zap, Star } from "lucide-react"
 
 const PRICES_INR = {
   single: 499,
@@ -187,7 +187,6 @@ function PackCard({ id, title, coverImage }: { id: string; title: string; coverI
   const { addPack, items } = useCart()
   const inCart = items.some((i) => i.id === id)
   const samples = packSamples[id as keyof typeof packSamples] || []
-  const [isHovered, setIsHovered] = useState(false)
 
   return (
     <Card
@@ -195,8 +194,6 @@ function PackCard({ id, title, coverImage }: { id: string; title: string; coverI
         "group relative overflow-hidden bg-[#151515] border-2 border-[#2a2a2a] shadow-soft transition-all duration-500 hover:shadow-glow hover:border-[#ff3366]",
         inCart && "border-[#ff3366] shadow-glow"
       )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Grunge Background Pattern */}
       <div className="absolute inset-0 opacity-5">
@@ -213,24 +210,11 @@ function PackCard({ id, title, coverImage }: { id: string; title: string; coverI
             alt={`${title} artwork`}
             width={800}
             height={800}
-            className={cn(
-              "h-full w-full object-cover transition-all duration-500 grayscale-[30%]",
-              isHovered && "scale-110 grayscale-0"
-            )}
+            className="h-full w-full object-cover grayscale-[30%]"
           />
           
           {/* Dark Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-          
-          {/* Play Button Overlay */}
-          <div className={cn(
-            "absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300",
-            isHovered && "opacity-100"
-          )}>
-            <div className="w-16 h-16 bg-[#ff3366] flex items-center justify-center shadow-glow border-2 border-[#ff3366]/50">
-              <Play className="w-6 h-6 text-black ml-1" fill="black" />
-            </div>
-          </div>
         </div>
 
         {/* Audio Players */}

@@ -10,6 +10,31 @@ interface AudioPlayerProps {
   className?: string
 }
 
+// Global audio manager to track currently playing audio
+const audioManager = {
+  currentAudio: null as HTMLAudioElement | null,
+  registerAudio: (audio: HTMLAudioElement) => {
+    // Stop any currently playing audio
+    if (audioManager.currentAudio && audioManager.currentAudio !== audio) {
+      audioManager.currentAudio.pause()
+      audioManager.currentAudio.currentTime = 0
+    }
+    audioManager.currentAudio = audio
+  },
+  unregisterAudio: (audio: HTMLAudioElement) => {
+    if (audioManager.currentAudio === audio) {
+      audioManager.currentAudio = null
+    }
+  },
+  stopAll: () => {
+    if (audioManager.currentAudio) {
+      audioManager.currentAudio.pause()
+      audioManager.currentAudio.currentTime = 0
+      audioManager.currentAudio = null
+    }
+  }
+}
+
 export function AudioPlayer({ src, title, className = "" }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -22,18 +47,36 @@ export function AudioPlayer({ src, title, className = "" }: AudioPlayerProps) {
     const audio = audioRef.current
     if (!audio) return
 
+    // Register this audio element
+    audioManager.registerAudio(audio)
+
     const updateTime = () => setCurrentTime(audio.currentTime)
     const updateDuration = () => setDuration(audio.duration)
-    const handleEnded = () => setIsPlaying(false)
+    const handleEnded = () => {
+      setIsPlaying(false)
+      audioManager.unregisterAudio(audio)
+    }
+    const handlePlay = () => {
+      setIsPlaying(true)
+      audioManager.registerAudio(audio)
+    }
+    const handlePause = () => {
+      setIsPlaying(false)
+    }
 
     audio.addEventListener('timeupdate', updateTime)
     audio.addEventListener('loadedmetadata', updateDuration)
     audio.addEventListener('ended', handleEnded)
+    audio.addEventListener('play', handlePlay)
+    audio.addEventListener('pause', handlePause)
 
     return () => {
       audio.removeEventListener('timeupdate', updateTime)
       audio.removeEventListener('loadedmetadata', updateDuration)
       audio.removeEventListener('ended', handleEnded)
+      audio.removeEventListener('play', handlePlay)
+      audio.removeEventListener('pause', handlePause)
+      audioManager.unregisterAudio(audio)
     }
   }, [])
 
@@ -43,10 +86,16 @@ export function AudioPlayer({ src, title, className = "" }: AudioPlayerProps) {
 
     if (isPlaying) {
       audio.pause()
+      setIsPlaying(false)
+      audioManager.unregisterAudio(audio)
     } else {
-      audio.play()
+      // Register and play - this will stop other audio
+      audioManager.registerAudio(audio)
+      audio.play().catch(error => {
+        console.error('Error playing audio:', error)
+      })
+      setIsPlaying(true)
     }
-    setIsPlaying(!isPlaying)
   }
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
