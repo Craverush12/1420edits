@@ -317,3 +317,15 @@ body::before {
     font-weight: 700;
   }
 }
+
+/* Ensure Razorpay modal appears above all other elements */
+.razorpay-checkout-frame,
+iframe[name*="razorpay"],
+#rzp-checkout {
+  z-index: 99999 !important;
+}
+
+/* Ensure Razorpay modal overlay doesn't get blocked */
+.razorpay-overlay {
+  z-index: 99998 !important;
+}

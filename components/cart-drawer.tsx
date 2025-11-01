@@ -103,6 +103,23 @@ export function CartDrawer() {
   async function checkout(email: string) {
     try {
       setProcessing(true)
+      
+      // Close the cart drawer first to prevent overlay conflicts with Razorpay
+      setOpen(false)
+      setShowEmail(false)
+      
+      // Wait a bit for the drawer to close and overlay to disappear
+      await new Promise(resolve => setTimeout(resolve, 300))
+      
+      // Force remove any blocking overlays that might still be in DOM
+      const overlays = document.querySelectorAll('[data-slot="sheet-overlay"], [data-radix-dialog-overlay]')
+      overlays.forEach(overlay => {
+        if (overlay instanceof HTMLElement) {
+          overlay.style.display = 'none'
+          overlay.style.pointerEvents = 'none'
+        }
+      })
+      
       await ensureRazorpayScript()
 
       const notes = {
@@ -120,7 +137,9 @@ export function CartDrawer() {
         }),
       })
       if (!create.ok) {
+        setOpen(true) // Reopen drawer if order creation failed
         alert("Checkout not ready. Please check Razorpay keys in Vars.")
+        setProcessing(false)
         return
       }
       const { orderId, keyId } = await create.json()
@@ -135,6 +154,22 @@ export function CartDrawer() {
         prefill: { email },
         notes,
         theme: { color: "#0ea5a3" },
+        modal: {
+          ondismiss: function() {
+            // Reopen cart drawer if user cancels Razorpay
+            setOpen(true)
+            setProcessing(false)
+            // Re-enable any overlays that were disabled
+            const overlays = document.querySelectorAll('[data-slot="sheet-overlay"], [data-radix-dialog-overlay]')
+            overlays.forEach(overlay => {
+              if (overlay instanceof HTMLElement) {
+                overlay.style.display = ''
+                overlay.style.pointerEvents = ''
+              }
+            })
+          },
+          zindex: 99999 // Ensure Razorpay modal appears above everything
+        },
         handler: async (response) => {
           try {
             // Update stock for each pack
@@ -178,17 +213,17 @@ export function CartDrawer() {
           }
           
           clear()
-          setOpen(false)
           router.push("/downloads") // go to downloads after payment
         },
       })
       rz.open()
     } catch (e) {
       console.log("[v0] razorpay error", e)
+      setOpen(true) // Reopen drawer on error
       alert("Something went wrong. Please try again.")
-    } finally {
       setProcessing(false)
     }
+    // Don't set processing to false here - let it stay true until Razorpay is dismissed or payment completes
   }
 
   return (
